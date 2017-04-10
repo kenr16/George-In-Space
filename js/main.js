@@ -90,7 +90,7 @@ PlayState.init = function () {
 PlayState.preload = function () {
     this.game.load.spritesheet('hero', 'images/hero.png', 36, 42);
     this.game.load.image('background', 'images/background.png');
-    this.game.load.json('level:1', 'data/level01.json');
+    this.game.load.json('level:1', 'data/level02.json');
     this.game.load.image('ground', 'images/ground.png');
     this.game.load.image('grass:8x1', 'images/grass_8x1.png');
     this.game.load.image('grass:6x1', 'images/grass_6x1.png');
@@ -119,6 +119,8 @@ PlayState.create = function () {
     this.game.add.image(0, 0, 'background');
     this._loadLevel(this.game.cache.getJSON('level:1'));
     this._createHud();
+    this.game.world.setBounds(0,0, 1300, 1300);
+    this.game.camera.follow(this.hero);
 };
 
 PlayState._loadLevel = function (data) {
@@ -136,7 +138,7 @@ PlayState._loadLevel = function (data) {
     // spawn important objects
     data.coins.forEach(this._spawnCoin, this);
     // enable gravity
-    const GRAVITY = 1200;
+    const GRAVITY = 1000;
     this.game.physics.arcade.gravity.y = GRAVITY;
 };
 
@@ -186,10 +188,10 @@ PlayState._spawnCoin = function (coin) {
 
 PlayState._spawnCharacters = function (data) {
     // spawn spiders
-    data.spiders.forEach(function (spider) {
-        let sprite = new Spider(this.game, spider.x, spider.y);
-        this.spiders.add(sprite);
-    }, this);
+    // data.spiders.forEach(function (spider) {
+    //     let sprite = new Spider(this.game, spider.x, spider.y);
+    //     this.spiders.add(sprite);
+    // }, this);
     // spawn hero
     this.hero = new Hero(this.game, data.hero.x, data.hero.y);
     this.game.add.existing(this.hero);
