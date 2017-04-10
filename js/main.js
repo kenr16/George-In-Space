@@ -119,7 +119,7 @@ PlayState.create = function () {
     this.game.add.image(0, 0, 'background');
     this._loadLevel(this.game.cache.getJSON('level:1'));
     this._createHud();
-    this.game.world.setBounds(0,0, 1300, 1300);
+    this.game.world.setBounds(0,0, 960, 1300);
     this.game.camera.follow(this.hero);
 };
 
