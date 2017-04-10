@@ -14,7 +14,6 @@ function Hero(game, x, y) {
 Hero.prototype = Object.create(Phaser.Sprite.prototype);
 Hero.prototype.constructor = Hero;
 Hero.prototype.move = function (direction) {
-    const SPEED = 600; //change speed for test
     this.body.velocity.x = direction * SPEED;
     if (this.body.velocity.x < 0) {
        this.scale.x = -1;
