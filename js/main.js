@@ -139,7 +139,7 @@ PlayState.preload = function () {
     this.game.load.audio('sfx:jump', 'audio/jump.wav');
     this.game.load.audio('sfx:coin', 'audio/coin.wav');
     this.game.load.spritesheet('coin', 'images/coin_animated.png', 32, 32);
-    this.game.load.spritesheet('spider', 'images/spider.png', 42, 32);
+    this.game.load.spritesheet('spider', 'images/spider.png', 32, 32);
     this.game.load.image('invisible-wall', 'images/invisible_wall.png');
     this.game.load.audio('sfx:stomp', 'audio/stomp.wav');
     this.game.load.image('icon:coin', 'images/coin_icon.png');
@@ -432,7 +432,7 @@ function Spider(game, x, y) {
     Phaser.Sprite.call(this, game, x, y, 'spider');
 
     // anchor
-    this.anchor.set(0.5);
+    this.anchor.set(0.5, 0.5);
     // animation
     this.animations.add('crawl', [0, 1, 2], 20, true);
     this.animations.add('die', [0, 4, 0, 4, 0, 4, 3, 3, 3, 3, 3, 3], 12);
@@ -457,6 +457,12 @@ Spider.prototype.update = function () {
     }
     else if (this.body.touching.left || this.body.blocked.left) {
         this.body.velocity.x = Spider.SPEED; // turn right
+    }
+    if (this.body.velocity.x < 0) {
+       this.scale.x = -1;
+    }
+    else if (this.body.velocity.x > 0) {
+       this.scale.x = 1;
     }
 };
 
