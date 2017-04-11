@@ -50,16 +50,17 @@ body {
 }
 
 #game {
+  z-index: 4;
 }
 
 .gameholder {
   margin-top: 150px;
   padding: 40px;
   border-radius: 45px;
-  background: linear-gradient(#002e4d, #0099cc); /* Standard syntax */
   height: 680px;
   width: 1040px;
-  background: radial-gradient(#0099cc, #669999, #002633); /* Standard syntax */
+  background: radial-gradient(#0099cc, #669999, #002633);
+  z-index: 2;
 }
 
 
@@ -97,7 +98,7 @@ body {
   padding: 30px;
   bottom: 0;
   z-index: 1;
-  transform: translate(0px, 225px);
+  transform: translate(0px, 210px);
 }
 
 #footer span {

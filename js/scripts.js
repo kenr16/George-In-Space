@@ -12,7 +12,7 @@ $(document).ready(function(){
 
 
   $("#footer span").hover(function() {
-    $("#footer").animate({bottom: '225px'}, 100);
+    $("#footer").animate({bottom: '210px'}, 100);
     $("#footer span").addClass("move-span");
 
   });

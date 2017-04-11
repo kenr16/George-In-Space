@@ -14,9 +14,9 @@ function Hero(game, x, y) {
 Hero.prototype = Object.create(Phaser.Sprite.prototype);
 Hero.prototype.constructor = Hero;
 Hero.prototype.move = function (direction) {
-    const SPEED = 200;
-    this.body.velocity.x = direction * SPEED;
-    if (this.body.velocity.x < 0) {
+    const SPEED = 5;
+    this.x += direction * SPEED;
+    if (this.x < 0) {
        this.scale.x = -1;
     }
     else if (this.body.velocity.x > 0) {
@@ -34,7 +34,7 @@ Hero.prototype.jump = function () {
     return canJump;
 };
 Hero.prototype.bounce = function () {
-    const BOUNCE_SPEED = 200;
+    const BOUNCE_SPEED = 400;
     this.body.velocity.y = -BOUNCE_SPEED;
 };
 
@@ -62,6 +62,17 @@ Hero.prototype.update = function () {
     if (this.animations.name !== animationName) {
         this.animations.play(animationName);
     }
+};
+
+Hero.prototype.wound = function () {
+    // update sprite to tint it red
+    this.tint = 0xff00ff;
+    //this.bounce();
+    this.body.velocity.y = -1000;
+    this.body.velocity.x = (this.body.touching.right) ? -500: 500;
+
+    this.animations.play('fall');
+    //this.alpha = 0;
 };
 
 // function bitTwiddler = function(bit) {
@@ -116,7 +127,6 @@ PlayState.init = function (data) {
 PlayState.preload = function () {
     this.game.load.json('level:0', 'data/level00.json');
     this.game.load.json('level:1', 'data/level01.json');
-
     this.game.load.spritesheet('hero', 'images/hero.png', 36, 42);
     this.game.load.image('background', 'images/background.png');
     this.game.load.json('level:1', 'data/level01.json');
@@ -167,7 +177,8 @@ PlayState._loadLevel = function (data) {
     this.coins = this.game.add.group();
     this.spiders = this.game.add.group();
     this.enemyWalls = this.game.add.group();
-    this.enemyWalls.visible = false;
+    // this.enemyWalls.visible = false;
+    this.enemyWalls.alpha = 0.1;  //sets the transparency
     // spawn all platforms
     data.platforms.forEach(this._spawnPlatform, this);
     //...
@@ -304,12 +315,14 @@ PlayState._spawnCoin = function (coin) {
 
 PlayState._spawnCharacters = function (data) {
     // spawn spiders
-    // data.spiders.forEach(function (spider) {
-    //     let sprite = new Spider(this.game, spider.x, spider.y);
-    //     this.spiders.add(sprite);
-    // }, this);
+    data.spiders.forEach(function (spider) {
+       let sprite = new Spider(this.game, spider.x, spider.y);
+       this.spiders.add(sprite);
+    }, this);
     // spawn hero
     this.hero = new Hero(this.game, data.hero.x, data.hero.y);
+    console.log(this.hero);
+    this.hero.body.friction.x = .5;
     this.game.add.existing(this.hero);
 };
 
@@ -344,7 +357,8 @@ PlayState.update = function () {
 PlayState._handleCollisions = function () {
     this.game.physics.arcade.collide(this.spiders, this.enemyWalls);
     this.game.physics.arcade.collide(this.spiders, this.platforms);
-    this.game.physics.arcade.collide(this.hero, this.platforms);
+    this.game.physics.arcade.collide(this.hero, this.platforms, this._onHeroVsplatforms,
+        null, this);
     this.game.physics.arcade.overlap(this.hero, this.coins, this._onHeroVsCoin,
         null, this);
     this.game.physics.arcade.overlap(this.hero, this.spiders,
@@ -364,6 +378,11 @@ PlayState._onHeroVsCoin = function (hero, coin) {
     this.coinPickupCount++;
 };
 
+PlayState._onHeroVsplatforms = function (hero) {
+    hero.tint = 0xffffff;
+    hero.alpha = 1;
+};
+
 PlayState._onHeroVsEnemy = function (hero, enemy) {
     if (hero.body.velocity.y > 0) { // kill enemies when hero is falling
         hero.bounce();
@@ -372,7 +391,9 @@ PlayState._onHeroVsEnemy = function (hero, enemy) {
     }
     else { // game over -> restart the game
         this.sfx.stomp.play();
-        this.game.state.restart(true, false, {level: this.level});
+        //this.game.state.restart(true, false, {level: this.level});
+        hero.wound();
+        game.add.tween(hero).to({alpha:0}, 200, Phaser.Easing.Linear.None, true, 0, 5, true);
     }
 };
 
@@ -395,9 +416,12 @@ PlayState._handleInput = function () {
     else if (this.keys.right.isDown) { // move hero right
         this.hero.move(1);
     }
-    else { // stop
-        this.hero.move(0);
-    }
+    // this.keys.left.onDown.add(function() {
+    //   this.hero.move(-1);
+    // }, this);
+    // this.keys.right.onDown.add(function() {
+    //   this.hero.move(1);
+    // }, this);
     this.keys.up.onDown.add(function () {
         this.hero.jump();
     }, this);
@@ -410,7 +434,7 @@ function Spider(game, x, y) {
     // anchor
     this.anchor.set(0.5);
     // animation
-    this.animations.add('crawl', [0, 1, 2], 8, true);
+    this.animations.add('crawl', [0, 1, 2], 20, true);
     this.animations.add('die', [0, 4, 0, 4, 0, 4, 3, 3, 3, 3, 3, 3], 12);
     this.animations.play('crawl');
 
@@ -420,7 +444,7 @@ function Spider(game, x, y) {
     this.body.velocity.x = Spider.SPEED;
 }
 
-Spider.SPEED = 100;
+Spider.SPEED = 200;
 
 // inherit from Phaser.Sprite
 Spider.prototype = Object.create(Phaser.Sprite.prototype);
