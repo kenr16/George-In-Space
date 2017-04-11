@@ -105,7 +105,8 @@ PlayState.init = function (data) {
             this.sfx.jump.play();
         }
     }, this);
-    this.coinPickupCount = 0;
+    console.log(data);
+    this.coinPickupCount = data.score||0;
     this.hasKey = false;
     this.level = (data.level || 0) % LEVEL_COUNT;
 };
@@ -265,6 +266,7 @@ PlayState.update = function () {
     this._handleCollisions();
     this._handleInput();
     this.coinFont.text = `x${this.coinPickupCount}`;
+    //console.log(this.coinPickupCount);
     this.keyIcon.frame = this.hasKey ? 1 : 0;
 };
 
@@ -299,7 +301,7 @@ PlayState._onHeroVsEnemy = function (hero, enemy) {
     }
     else { // game over -> restart the game
         this.sfx.stomp.play();
-        this.game.state.restart(true, false, {level: this.level});
+        this.game.state.restart(true, false, {level: this.level, score: this.coinPickupCount});
     }
 };
 
@@ -311,7 +313,8 @@ PlayState._onHeroVsKey = function (hero, key) {
 
 PlayState._onHeroVsDoor = function (hero, door) {
     this.sfx.door.play();
-    this.game.state.restart(true, false, { level: this.level + 1 });
+    console.log(this.coinPickupCount);
+    this.game.state.restart(true, false, { level: this.level + 1, score: this.coinPickupCount });
     // TODO: go to the next level instead
 };
 
