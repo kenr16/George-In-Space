@@ -154,8 +154,9 @@ PlayState.create = function () {
     };
     this.game.add.image(0, 0, 'background');
     this._loadLevel(this.game.cache.getJSON(`level:${this.level}`));
-    this._createHud();
     this.game.world.setBounds(0,0, 960, 1300);
+    //this._loadRandomPlatforms();
+    this._createHud();
     this.game.camera.follow(this.hero);
 };
 
@@ -180,6 +181,78 @@ PlayState._loadLevel = function (data) {
     const GRAVITY = 1000;
     this.game.physics.arcade.gravity.y = GRAVITY;
 };
+
+PlayState._loadRandomPlatforms = function() {
+  const PLAYER_HEIGHT = 32;
+
+  const JUMP_DISTANCE = 200;
+
+  //
+
+  var drawBars = function(startX, startY, endX, endY, playstate) {
+  playstate.platforms = playstate.game.add.group();
+  let blocksizes = [1 * PLAYER_HEIGHT, 2 * PLAYER_HEIGHT, 4 * PLAYER_HEIGHT, 8 * PLAYER_HEIGHT];
+  // go bottom to top
+  // place bar across bottom of worldlet
+  // place bars above to top
+  let originY = endY;
+  let originX = startX;
+  while (originY > startY) {
+    while (originX < endX - PLAYER_HEIGHT) {
+      //grab a random sized block, see if it fits in the line
+      //if not, try a smaller one
+      let randomSize = blocksizes[Math.floor(Math.random() * blocksizes.length)];
+      if (originX + randomSize > endX) {
+        randomSize = blocksizes[Math.floor(Math.random() * blocksizes.indexOf(randomSize))];
+      }
+      playstate.platforms.add(generatePlatform(0, originY, randomSize, playstate));
+      originX += randomSize;
+    }
+    originY -= PLAYER_HEIGHT * 2;
+  }
+  // knock out segments as long as doing so will not create an inaccessible area
+
+  //return game;
+  }
+
+  var generatePlatform = function(x, y, width, state) {
+    let sprite = state.platforms.create(x, y, 'grass:1x1');
+    //sprite.width = width;
+    //sprite.tint = 0xff00ff;
+    state.game.physics.enable(sprite);
+    sprite.body.allowGravity = false;
+    sprite.body.immovable = true;
+    return sprite;
+  }
+
+  // function drawStars(game, startX, startY, endX, endY) {
+  //
+  //
+  //
+  // return game;
+  // }
+
+  var checkCorners = function(obj, existing, game) {
+    let result = false;
+    ['top', 'bottom'].forEach(function(v) {
+      ['left', 'right'].forEach(function(s) {
+        if (this.getNearestObject(obj[v], obj[s], existing) < JUMP_DISTANCE) {
+          result = true;
+        }
+      })
+    });
+    return result;
+  }
+
+  var getNearestObject = function(x, y, existing) {
+    let closest = existing.reduce(function(acc, curr) {
+      let distance = this.game.arcade.distanceToXY(curr, x, y);
+      if (distance < acc) acc = distance;
+    });
+    return closest;
+  }
+  drawBars(0,0,this.stage.height,this.stage.width, this);
+}
 
 PlayState._createHud = function () {
     const NUMBERS_STR = '0123456789X ';
@@ -371,9 +444,12 @@ Spider.prototype.die = function () {
     }, this);
 };
 
-
+function sleepFor( sleepDuration ){
+    var now = new Date().getTime();
+    while(new Date().getTime() < now + sleepDuration){ /* do nothing */ }
+}
 window.onload = function () {
-    let game = new Phaser.Game(960, 600, Phaser.AUTO, 'game');
+    game = new Phaser.Game(960, 600, Phaser.AUTO, 'gamething');
     game.state.add('play', PlayState);
     game.state.start('play');
     game.state.start('play', true, false, {level: 0});
