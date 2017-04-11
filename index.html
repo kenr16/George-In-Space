@@ -1,11 +1,14 @@
 <!doctype html>
 <head>
     <title>HTML5 games workshop: One-screen platformer</title>
-    <meta charset="utf-8">
-
     <script src="js/phaser.min.js"></script>
     <script src="js/main.js"></script>
-
+    <link href="https://fonts.googleapis.com/css?family=Press+Start+2P" rel="stylesheet">
+    <link href="bower_components/bootstrap/dist/css/bootstrap.css" rel="stylesheet" type="text/css">
+    <script src="bower_components/jquery/dist/jquery.js"></script>
+    <script src="bower_components/bootstrap/dist/js/bootstrap.js"></script>
+    <script src="js/scripts.js"></script>
+    <link href="css/styles.css" rel="stylesheet" type="text/css">
     <style>
         canvas {
             margin: 0 auto;
@@ -13,5 +16,55 @@
     </style>
 </head>
 <body>
-    <div id="gamething"></div>
+  <div class="veil end-screen">
+    <div class="dropping-text">
+      <p>Thanks for playing and good luck next time!</p>
+    </div>
+  </div>
+
+  <div id="topbar">
+    <div class="row">
+      <div class="col-sm-4">
+        <p class="topbutton">New Game</p>
+      </div>
+      <div class="col-sm-4">
+        <p class="topbutton">High Scores</p>
+      </div>
+
+    </div>
+
+  </div>
+
+  <div id="background" class="tint">
+  </div>
+    <div class="row">
+      <div class="col-md-2">
+      </div>
+      <div class="col-md-8">
+        <div class="gameholder">
+          <div id="game"></div>
+        </div>
+      </div>
+      <div class="col-md-2">
+      </div>
+      <div class="highscores">
+        <h2>High Scores</h2>
+          <ul></ul>
+      </div>
+
+    </div>
+
+  <span class="btn btn-primary" id="click-here">Activate Screen!</span>
+
+  <div id="footer">
+    <span>About Us:</span>
+    <div>
+      <br>
+      Kai Leahy<br>
+      Mohamed Warsame<br>
+      Ken Rutan<br>
+      Galin McMahon<br>
+      <strong>Copyright &copy; 2017</strong>
+    </div>
+  </div>
 </body>
