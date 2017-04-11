@@ -99,7 +99,7 @@ PlayState.preload = function () {
     this.game.load.image('grass:1x1', 'images/grass_1x1.png');
     this.game.load.audio('sfx:jump', 'audio/jump.wav');
     this.game.load.audio('sfx:coin', 'audio/coin.wav');
-    this.game.load.spritesheet('coin', 'images/coin_animated.png', 22, 22);
+    this.game.load.spritesheet('coin', 'images/coin_animated.png', 32, 32);
     this.game.load.spritesheet('spider', 'images/spider.png', 42, 32);
     this.game.load.image('invisible-wall', 'images/invisible_wall.png');
     this.game.load.audio('sfx:stomp', 'audio/stomp.wav');
@@ -180,7 +180,7 @@ PlayState._spawnEnemyWall = function (x, y, side) {
 PlayState._spawnCoin = function (coin) {
     let sprite = this.coins.create(coin.x, coin.y, 'coin');
     sprite.anchor.set(0.5, 0.5);
-    sprite.animations.add('rotate', [0, 1, 2, 1], 6, true); // 6fps, looped
+    sprite.animations.add('rotate', [0, 1, 2, 3], 2, true); // 6fps, looped
     sprite.animations.play('rotate');
     this.game.physics.enable(sprite);
     sprite.body.allowGravity = false;
