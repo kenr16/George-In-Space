@@ -116,7 +116,7 @@ PlayState.init = function (data) {
             this.sfx.jump.play();
         }
     }, this);
-    this.coinPickupCount = 0;
+    this.coinPickupCount = data.score||0;
     this.lives = data.lives || 3; //Allows the player a counter with three lives.
     this.hasKey = false;
     this.level = (data.level || 0) % LEVEL_COUNT;
@@ -349,7 +349,7 @@ PlayState._spawnCharacters = function (data) {
     this.hero.checkWorldBounds = true;
     this.hero.events.onOutOfBounds.add(function(hero) {
       this.lives--;
-      this.game.state.restart(true, false, {level: this.level, lives: this.lives});
+      this.game.state.restart(true, false, {level: this.level, lives: this.lives, score:this.score});
     }, this);
     this.hero.body.friction.x = .5;
     this.game.add.existing(this.hero);
@@ -425,13 +425,12 @@ PlayState._onHeroVsEnemy = function (hero, enemy) {
     }
     else { // game over -> restart the game
         this.sfx.stomp.play();
-        //this.game.state.restart(true, false, {level: this.level});
+        this.game.state.restart(true, false, {level: this.level, score: this.coinPickupCount, lives: this.lives});
         hero.wound();
         game.add.tween(hero).to({alpha:0}, 200, Phaser.Easing.Linear.None, true, 0, 5, true);
         this.lives--;
-        console.log(this.lives);  //This declares the number of lives remaining upon each blow.
         if (this.lives === -1) {
-          this.game.state.restart(true, false, {level: this.level - 1 });
+          this.game.state.restart(true, false, {level: this.level - 1, score: this.coinPickupCount, lives: this.lives });
         }
     }
 };
@@ -444,8 +443,7 @@ PlayState._onHeroVsKey = function (hero, key) {
 
 PlayState._onHeroVsDoor = function (hero, door) {
     this.sfx.door.play();
-    this.game.state.restart(true, false, { level: this.level + 1 });
-    // TODO: go to the next level instead
+    this.game.state.restart(true, false, { level: this.level + 1, score: this.coinPickupCount, lives:this.lives });
 };
 
 PlayState._onMobileVsSpikes = function (mobile, spikes) {
