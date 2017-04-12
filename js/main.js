@@ -168,7 +168,7 @@ PlayState.create = function () {
         door: this.game.add.audio('sfx:door'),
     };
     this.game.add.image(0, 0, 'background');
-    if (true) {
+    if (false) {
       this._loadLevel(this.game.cache.getJSON(`level:${this.level}`));
     } else {
       this.map = this.game.add.tilemap('levelKai');
