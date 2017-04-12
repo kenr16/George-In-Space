@@ -51,6 +51,7 @@ body {
 
 #game {
   z-index: 4;
+  margin-top: 150px;
 }
 
 .gameholder {

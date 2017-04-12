@@ -68,7 +68,7 @@ Hero.prototype.wound = function () {
     // update sprite to tint it red
     this.tint = 0xff00ff;
     //this.bounce();
-    this.body.velocity.y = -1000;
+    this.body.velocity.y = -500;
     this.body.velocity.x = (this.body.touching.right) ? -500: 500;
 
     this.animations.play('fall');
@@ -117,6 +117,7 @@ PlayState.init = function (data) {
         }
     }, this);
     this.coinPickupCount = 0;
+    this.lives = 3; //Allows the player a counter with three lives.
     this.hasKey = false;
     this.level = (data.level || 0) % LEVEL_COUNT;
 };
@@ -149,6 +150,7 @@ PlayState.preload = function () {
     this.game.load.audio('sfx:key', 'audio/key.wav');
     this.game.load.audio('sfx:door', 'audio/door.wav');
     this.game.load.spritesheet('icon:key', 'images/key_icon.png', 34, 30);
+
 
 };
 
@@ -271,16 +273,29 @@ PlayState._createHud = function () {
         NUMBERS_STR, 6);
     this.keyIcon = this.game.make.image(0, 19, 'icon:key');
     this.keyIcon.anchor.set(0, 0.5);
-    // remove the previous let coinIcon = ... line and use this one instead
     let coinIcon = this.game.make.image(this.keyIcon.width + 7, 0, 'icon:coin');
     let coinScoreImg = this.game.make.image(coinIcon.x + coinIcon.width,
         coinIcon.height / 2, this.coinFont);
     coinScoreImg.anchor.set(0, 0.5);
+
+    this.lifeFont = this.game.add.retroFont('font:numbers', 20, 26,
+    NUMBERS_STR, 6);
+    this.lifeIcon = this.game.make.image(0, 19, 'icon:key');  //Change this to a heart icon or something later on.
+    //this.lifeIcon.anchor.set(0, 0.5);
+    let lifeIcon = this.game.make.image(this.lifeIcon.width + 110, 0, 'icon:coin');
+    let lifeScoreImg = this.game.make.image(lifeIcon.x + lifeIcon.width,
+      lifeIcon.height / 2, this.lifeFont);
+      lifeScoreImg.anchor.set(0, 0.5);
+
     this.hud = this.game.add.group();
     this.hud.add(coinIcon);
-    this.hud.position.set(10, 10);
+    this.hud.add(lifeIcon);
+    this.hud.add(lifeScoreImg);
     this.hud.add(coinScoreImg);
     this.hud.add(this.keyIcon);
+    //this.hud.position.set(10, 750);
+    this.hud.fixedToCamera = true;
+    this.hud.cameraOffset.setTo(10, 10);
 };
 
 
@@ -352,6 +367,7 @@ PlayState.update = function () {
     this._handleInput();
     this.coinFont.text = `x${this.coinPickupCount}`;
     this.keyIcon.frame = this.hasKey ? 1 : 0;
+    this.lifeFont.text = `x${this.lives}`;
 };
 
 PlayState._handleCollisions = function () {
@@ -394,6 +410,11 @@ PlayState._onHeroVsEnemy = function (hero, enemy) {
         //this.game.state.restart(true, false, {level: this.level});
         hero.wound();
         game.add.tween(hero).to({alpha:0}, 200, Phaser.Easing.Linear.None, true, 0, 5, true);
+        this.lives--;
+        console.log(this.lives);  //This declares the number of lives remaining upon each blow.
+        if (this.lives === -1) {
+          this.game.state.restart(true, false, {level: this.level - 1 });
+        }
     }
 };
 
