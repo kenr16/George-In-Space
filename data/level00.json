@@ -4,7 +4,7 @@
         {"image": "grass:4x1", "x": 420, "y": 420}
     ],
     "spikes": [
-      {"image": "grass:4x1", "x": 600, "y": 320}
+      {"image": "spikey", "x": 600, "y": 320}
     ],
     "decoration": [
         {"frame": 2, "x": 630, "y": 504},
