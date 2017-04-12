@@ -3,6 +3,9 @@
         {"image": "ground", "x": 0, "y": 546},
         {"image": "grass:4x1", "x": 420, "y": 420}
     ],
+    "spikes": [
+      {"image": "grass:4x1", "x": 600, "y": 320}
+    ],
     "decoration": [
         {"frame": 2, "x": 630, "y": 504},
         {"frame": 2, "x": 663, "y": 504},

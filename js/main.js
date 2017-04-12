@@ -117,7 +117,7 @@ PlayState.init = function (data) {
         }
     }, this);
     this.coinPickupCount = 0;
-    this.lives = 3; //Allows the player a counter with three lives.
+    this.lives = data.lives || 3; //Allows the player a counter with three lives.
     this.hasKey = false;
     this.level = (data.level || 0) % LEVEL_COUNT;
 };
@@ -179,6 +179,10 @@ PlayState._loadLevel = function (data) {
     this.coins = this.game.add.group();
     this.spiders = this.game.add.group();
     this.enemyWalls = this.game.add.group();
+    if (data.hasOwnProperty('spikes')) {
+      this.spikes = this.game.add.group();
+      data.spikes.forEach(this._spawnSpikes, this);
+    }
     // this.enemyWalls.visible = false;
     this.enemyWalls.alpha = 0.1;  //sets the transparency
     // spawn all platforms
@@ -306,9 +310,15 @@ PlayState._spawnPlatform = function (platform) {
     sprite.body.immovable = true;  //Makes the platform unmovable.
     this._spawnEnemyWall(platform.x, platform.y, 'left');
     this._spawnEnemyWall(platform.x + sprite.width, platform.y, 'right');
-
 };
-
+PlayState._spawnSpikes = function (spike) {
+    let sprite = this.spikes.create(spike.x, spike.y, spike.image);
+    this.game.physics.enable(sprite);
+    sprite.body.allowGravity = false;
+    sprite.body.immovable = true;  //Makes the spike unmovable.
+    this._spawnEnemyWall(spike.x, spike.y, 'left');
+    this._spawnEnemyWall(spike.x + sprite.width, spike.y, 'right');
+};
 PlayState._spawnEnemyWall = function (x, y, side) {
     let sprite = this.enemyWalls.create(x, y, 'invisible-wall');
     // anchor and y displacement
@@ -336,7 +346,11 @@ PlayState._spawnCharacters = function (data) {
     }, this);
     // spawn hero
     this.hero = new Hero(this.game, data.hero.x, data.hero.y);
-    console.log(this.hero);
+    this.hero.checkWorldBounds = true;
+    this.hero.events.onOutOfBounds.add(function(hero) {
+      this.lives--;
+      this.game.state.restart(true, false, {level: this.level, lives: this.lives});
+    }, this);
     this.hero.body.friction.x = .5;
     this.game.add.existing(this.hero);
 };
@@ -386,6 +400,10 @@ PlayState._handleCollisions = function () {
         function (hero, door) {
             return this.hasKey && hero.body.touching.down;
         }, this);
+        if(this.hasOwnProperty('spikes')) {
+          this.game.physics.arcade.collide(this.hero, this.spikes, this._onHeroVsSpikes, null, this);
+          this.game.physics.arcade.collide(this.spiders, this.spikes, this._onMobileVsSpikes, null, this);
+        }
 };
 
 PlayState._onHeroVsCoin = function (hero, coin) {
@@ -429,6 +447,18 @@ PlayState._onHeroVsDoor = function (hero, door) {
     this.game.state.restart(true, false, { level: this.level + 1 });
     // TODO: go to the next level instead
 };
+
+PlayState._onMobileVsSpikes = function (mobile, spikes) {
+  this.sfx.stomp.play();
+  mobile.kill();
+}
+
+PlayState._onHeroVsSpikes = function (hero, spikes) {
+  this.sfx.stomp.play();
+  hero.bounce();
+  hero.body.checkCollision.none = true;
+  hero.body.collideWorldBounds = false;
+}
 
 PlayState._handleInput = function () {
     if (this.keys.left.isDown) { // move hero left
