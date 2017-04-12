@@ -101,7 +101,7 @@ Hero.prototype.wound = function () {
 
 PlayState = {};
 // load game assets here
-const LEVEL_COUNT = 3;
+const LEVEL_COUNT = 5;
 
 PlayState.init = function (data) {
     this.keys = this.game.input.keyboard.addKeys({
@@ -129,6 +129,8 @@ PlayState.preload = function () {
     this.game.load.json('level:0', 'data/level00.json');
     this.game.load.json('level:1', 'data/level01.json');
     this.game.load.json('level:2', 'data/level02.json');
+    this.game.load.json('level:3', 'data/level03.json');
+    this.game.load.json('level:4', 'data/level04.json');
     this.game.load.spritesheet('hero', 'images/hero.png', 36, 42);
     this.game.load.image('background', 'images/background.png');
     this.game.load.image('ground', 'images/ground.png');
@@ -287,7 +289,7 @@ PlayState._createHud = function () {
     NUMBERS_STR, 6);
     this.lifeIcon = this.game.make.image(0, 19, 'icon:lifeIcon');  //Change this to a heart icon or something later on.
     //this.lifeIcon.anchor.set(0, 0.5);
-    let lifeIcon = this.game.make.image(this.lifeIcon.width + 110, 0, 'icon:lifeIcon');
+    let lifeIcon = this.game.make.image(this.lifeIcon.width + 125, 0, 'icon:lifeIcon');
     let lifeScoreImg = this.game.make.image(lifeIcon.x + lifeIcon.width,
       lifeIcon.height / 2, this.lifeFont);
       lifeScoreImg.anchor.set(0, 0.5);
@@ -427,11 +429,22 @@ PlayState._onHeroVsEnemy = function (hero, enemy) {
     }
     else { // game over -> restart the game
         this.sfx.stomp.play();
-        this.game.state.restart(true, false, {level: this.level, score: this.coinPickupCount, lives: this.lives});
         hero.wound();
         game.add.tween(hero).to({alpha:0}, 200, Phaser.Easing.Linear.None, true, 0, 5, true);
         this.lives--;
         if (this.lives === -1) {
+          //this.hero.kill();
+          //game.state.start('Over');
+          //alert("You scored " + this.coinPickupCount + " points!");
+          $("#insertTextHere").text(this.coinPickupCount);
+          $(".end-screen").fadeIn(1000);
+          // ({'top': '0, 50%'}, 600);
+          $(".dropping-text").animate({top: '600px'}, 650);
+
+          setTimeout(function() {
+            location.reload();
+          }, 5000);
+          this.lives = 3;
           this.game.state.restart(true, false, {level: this.level - 1, score: this.coinPickupCount, lives: this.lives });
         }
     }
@@ -478,6 +491,7 @@ PlayState._handleInput = function () {
     }, this);
 
 };
+
 
 function Spider(game, x, y) {
     Phaser.Sprite.call(this, game, x, y, 'spider');
@@ -532,6 +546,7 @@ function sleepFor( sleepDuration ){
 window.onload = function () {
     game = new Phaser.Game(960, 600, Phaser.AUTO, 'gamething');
     game.state.add('play', PlayState);
+    //game.state.add('GameOver', gameOver);
     game.state.start('play');
-    game.state.start('play', true, false, {level: 0});
+    game.state.start('play', true, false, {level: 4});
 };
