@@ -4,6 +4,11 @@ $(document).ready(function(){
     $(".end-screen").fadeIn(1000);
     // ({'top': '0, 50%'}, 600);
     $(".dropping-text").animate({top: '600px'}, 650);
+
+    setTimeout(function() {
+      location.reload();
+    }, 2000);
+
   });
   $(".end-screen").click(function(event) {
     $(".end-screen").fadeOut(1000);

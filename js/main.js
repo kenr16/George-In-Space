@@ -101,7 +101,7 @@ Hero.prototype.wound = function () {
 
 PlayState = {};
 // load game assets here
-const LEVEL_COUNT = 2;
+const LEVEL_COUNT = 3;
 
 PlayState.init = function (data) {
     this.keys = this.game.input.keyboard.addKeys({
@@ -128,9 +128,9 @@ PlayState.init = function (data) {
 PlayState.preload = function () {
     this.game.load.json('level:0', 'data/level00.json');
     this.game.load.json('level:1', 'data/level01.json');
+    this.game.load.json('level:2', 'data/level02.json');
     this.game.load.spritesheet('hero', 'images/hero.png', 36, 42);
     this.game.load.image('background', 'images/background.png');
-    this.game.load.json('level:1', 'data/level01.json');
     this.game.load.image('ground', 'images/ground.png');
     this.game.load.image('grass:8x1', 'images/grass_8x1.png');
     this.game.load.image('grass:6x1', 'images/grass_6x1.png');
@@ -147,6 +147,7 @@ PlayState.preload = function () {
     this.game.load.image('font:numbers', 'images/numbers.png');
     this.game.load.spritesheet('door', 'images/door.png', 42, 66);
     this.game.load.image('key', 'images/key.png');
+    this.game.load.image('icon:lifeIcon', 'images/lifecounter.png');
     this.game.load.audio('sfx:key', 'audio/key.wav');
     this.game.load.audio('sfx:door', 'audio/door.wav');
     this.game.load.spritesheet('icon:key', 'images/key_icon.png', 34, 30);
@@ -284,20 +285,21 @@ PlayState._createHud = function () {
 
     this.lifeFont = this.game.add.retroFont('font:numbers', 20, 26,
     NUMBERS_STR, 6);
-    this.lifeIcon = this.game.make.image(0, 19, 'icon:key');  //Change this to a heart icon or something later on.
+    this.lifeIcon = this.game.make.image(0, 19, 'icon:lifeIcon');  //Change this to a heart icon or something later on.
     //this.lifeIcon.anchor.set(0, 0.5);
-    let lifeIcon = this.game.make.image(this.lifeIcon.width + 110, 0, 'icon:coin');
+    let lifeIcon = this.game.make.image(this.lifeIcon.width + 110, 0, 'icon:lifeIcon');
     let lifeScoreImg = this.game.make.image(lifeIcon.x + lifeIcon.width,
       lifeIcon.height / 2, this.lifeFont);
       lifeScoreImg.anchor.set(0, 0.5);
 
     this.hud = this.game.add.group();
     this.hud.add(coinIcon);
+    this.hud.add(coinScoreImg);
     this.hud.add(lifeIcon);
     this.hud.add(lifeScoreImg);
-    this.hud.add(coinScoreImg);
     this.hud.add(this.keyIcon);
     //this.hud.position.set(10, 750);
+
     this.hud.fixedToCamera = true;
     this.hud.cameraOffset.setTo(10, 10);
 };
