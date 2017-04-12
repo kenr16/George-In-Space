@@ -1,0 +1,120 @@
+body {
+  /*background-color: #F7961D;*/
+
+}
+
+.veil {
+  display: none;
+}
+
+#topbar {
+  width: 100%;
+  height: 100px;
+  display:block;
+  border:3px solid black;
+  border-color: #000000;
+  border-width: 0px 0px 10px 0px;
+  background-color: #AEEAF1;
+  position: absolute;
+  text-align: center;
+  padding: 30px;
+  z-index: 1
+}
+
+.end-screen {
+  width: 100%;
+  height: 100%;
+  position: absolute;
+  background-color: #000000;
+  z-index: 2;
+  opacity: 0.80;
+}
+
+.dropping-text {
+  color: white;
+  text-align: center;
+  margin: 25%;
+  font-size: 45px;
+  transform: translate(0px, -600px);
+  position: absolute;
+}
+
+.topbutton {
+    font-family: 'Press Start 2P', cursive;
+    font-size: 25px;
+}
+
+.topbutton:hover{
+    color: blue;
+    cursor: progress;
+}
+
+#game {
+  z-index: 4;
+  margin-top: 150px;
+}
+
+.gameholder {
+  margin-top: 150px;
+  padding: 40px;
+  border-radius: 45px;
+  height: 680px;
+  width: 1040px;
+  background: radial-gradient(#0099cc, #669999, #002633);
+  z-index: 2;
+}
+
+
+
+#background {
+  width: 100%;
+  height: 100%;
+  background-image: url("../images/sitebackground.jpg");
+  -webkit-background-size: cover;
+  -moz-background-size: cover;
+  -o-background-size: cover;
+  background-size: cover;
+  overflow: hidden;
+  display:block;
+  position: fixed;
+  /*background-image:url('../img/background.jpg');*/
+  z-index: -1;
+  background-color: black;
+  display:inline-block;
+  opacity:0.45;
+}
+
+#footer {
+  width: 100%;
+  height: 300px;
+  display:block;
+  border:3px solid black;
+  font-family: 'Press Start 2P', cursive;
+  border-color: #000000;
+  border-width: 10px 0px 0px 0px;
+  background-color: #AEEAF1;
+  position: fixed;
+  transition: all 0.5s;
+  text-align: center;
+  padding: 30px;
+  bottom: 0;
+  z-index: 1;
+  transform: translate(0px, 210px);
+}
+
+#footer span {
+  font-size: 20px;
+  display: block;
+  margin: 10px auto 0 auto;
+  transition: all 0.75s;
+  cursor: pointer;
+}
+
+.highscores {
+  text-align: center;
+  font-family: 'Press Start 2P', cursive;
+}
+
+.move-span {
+  transform: translateX(1000px);
+}
