@@ -410,6 +410,10 @@ PlayState._onHeroVsCoin = function (hero, coin) {
     this.sfx.coin.play();
     coin.kill();
     this.coinPickupCount++;
+    if (this.coinPickupCount === 100) {
+      this.coinPickupCount = 0;
+      this.lives++;
+    }
 };
 
 PlayState._onHeroVsplatforms = function (hero) {
