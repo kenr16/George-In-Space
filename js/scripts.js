@@ -16,7 +16,7 @@ SplashScreen.preload = function() {
 SplashScreen.create = function() {
   this.game.add.image(0, 0, 'splashscreen');
   setTimeout(function () {
-      game.state.start('play', true, false, {level: 4});
+      game.state.start('play', true, false, {level: 0});
     }, 5000);
 }
 
