@@ -27,17 +27,30 @@ body {
   height: 100%;
   position: absolute;
   background-color: #000000;
-  z-index: 2;
   opacity: 0.80;
 }
 
 .title-screen {
-  top: 20.5%;
-  left: 25.5%;
-
   position: absolute;
   background-color: #000000;
   z-index: 2;
+  /*margin: 0 auto;*/
+  left:38%;
+  /*padding-left: 35%;
+  padding-right: 35%;*/
+}
+
+.highscores {
+  background-color: #AEEAF1;
+  position: absolute;
+  text-align: center;
+  width: 1000px;
+  height:750px;
+  margin-left: 300px;
+}
+
+.title-screen img {
+  margin: 0 auto;
 }
 
 .dropping-text {

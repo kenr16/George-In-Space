@@ -19,17 +19,15 @@
       <span id="insertTextHere"></span>
     </div>
   </div>
-  <div class="veil title-screen">
-    <img src="images/splash1.png"/>
-  </div>
+
 
   <div id="topbar">
     <div class="row">
       <div class="col-sm-4">
-        <p class="topbutton" id="click-here">Reset</p>
+        <p class="topbutton" id="click-here">New Game</p>
       </div>
       <div class="col-sm-4">
-        <p class="topbutton">High Scores</p>
+        <p class="topbutton" id="highscores">High Scores</p>
       </div>
       <div class="col-sm-4">
         <p class="topbutton"><a href="https://www.epicodus.com/">Epicodus Home</a></p>
@@ -42,18 +40,17 @@
 
   <div class="row">
     <div class="col-md-8">
-
-        <div id="game">
+      <div id="game">
+        <div class="highscores veil">
+          <h2>High Scores</h2>
+            <ul id="scoreResults"></ul>
         </div>
-        <style>
-            canvas {
-                margin: 0 auto;
-            }
-        </style>
-    </div>
-    <div class="highscores">
-      <h2>High Scores</h2>
-        <ul id="scoreResults"></ul>
+      </div>
+      <style>
+       canvas {
+           margin: 0 auto;
+       }
+      </style>
     </div>
   </div>
 
