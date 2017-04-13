@@ -109,6 +109,7 @@ PlayState.init = function (data) {
         right: Phaser.KeyCode.RIGHT,
         up: Phaser.KeyCode.UP // add this line
     });
+
     this.game.renderer.renderSession.roundPixels = true;
     this.keys.up.onDown.add(function () {
         let didJump = this.hero.jump();
@@ -159,6 +160,9 @@ PlayState.preload = function () {
     this.game.load.tilemap('levelKai', 'data/test.json', null, Phaser.Tilemap.TILED_JSON);
     this.game.load.image('lava', '/images/lava.png');
     this.game.load.image('platform', '/images/platform.png');
+
+
+
 };
 
 // create game entities and set up world here
