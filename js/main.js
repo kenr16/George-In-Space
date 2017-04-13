@@ -393,9 +393,18 @@ PlayState._spawnCharacters = function (data) {
     this.hero.checkWorldBounds = true;
     this.hero.events.onOutOfBounds.add(function(hero) {
       this.lives--;
-      this.game.state.restart(true, false, {level: this.level, lives: this.lives, score:this.score});
-    }, this);
-    this.hero.body.friction.x = .5;
+      if (this.lives > -1 ) {
+        this.game.state.restart(true, false, {level: this.level, lives: this.lives, score:this.score});
+      } else {
+          $("#insertTextHere").text(this.coinPickupCount);
+          $(".end-screen").fadeIn(1000);
+          $(".dropping-text").animate({top: '600px'}, 650);
+          let initials = prompt('enter your initials');
+          highscores.push({initials: initials, score:this.coinPickupCount});
+          setTimeout(startNewGame, 5000);
+          setTimeout(function(){$(".end-screen").hide()}, 5000);
+      }}, this);
+    this.hero.body.friction.x = .75;
     this.game.add.existing(this.hero);
 };
 
