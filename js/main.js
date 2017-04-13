@@ -404,7 +404,7 @@ PlayState._spawnKey = function (x, y) {
 PlayState.update = function () {
     this._handleCollisions();
     this._handleInput();
-    this.coinFont.text = `x${this.coinPickupCount}`;
+    this.coinFont.text = `x${this.coinPickupCount % 100}`;
     this.keyIcon.frame = this.hasKey ? 1 : 0;
     this.lifeFont.text = `x${this.lives}`;
 };
@@ -435,8 +435,7 @@ PlayState._onHeroVsCoin = function (hero, coin) {
     this.sfx.coin.play();
     coin.kill();
     this.coinPickupCount++;
-    if (this.coinPickupCount === 100) {
-      this.coinPickupCount = 0;
+    if (this.coinPickupCount % 100 === 0) {
       this.lives++;
     }
 };
