@@ -435,7 +435,7 @@ PlayState._onHeroVsCoin = function (hero, coin) {
     this.sfx.coin.play();
     coin.kill();
     this.coinPickupCount++;
-    if (this.coinPickupCount % 100) {
+    if (this.coinPickupCount % 100 === 0) {
       this.lives++;
     }
 };
