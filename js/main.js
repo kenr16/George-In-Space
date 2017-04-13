@@ -445,7 +445,7 @@ PlayState._onHeroVsplatforms = function (hero) {
     hero.tint = 0xffffff;
     hero.alpha = 1;
 };
-
+var highscores = [];
 PlayState._onHeroVsEnemy = function (hero, enemy) {
     if (hero.body.velocity.y > 0) { // kill enemies when hero is falling
         hero.bounce();
@@ -457,7 +457,7 @@ PlayState._onHeroVsEnemy = function (hero, enemy) {
         hero.wound();
         game.add.tween(hero).to({alpha:0}, 200, Phaser.Easing.Linear.None, true, 0, 5, true);
         this.lives--;
-        if (this.lives === -1) {
+        if (this.lives === 0) {
           //this.hero.kill();
           //game.state.start('Over');
           //alert("You scored " + this.coinPickupCount + " points!");
@@ -465,12 +465,13 @@ PlayState._onHeroVsEnemy = function (hero, enemy) {
           $(".end-screen").fadeIn(1000);
           // ({'top': '0, 50%'}, 600);
           $(".dropping-text").animate({top: '600px'}, 650);
-
-          setTimeout(function() {
-            location.reload();
-          }, 5000);
-          this.lives = 3;
-          this.game.state.restart(true, false, {level: this.level - 1, score: this.coinPickupCount, lives: this.lives });
+          let initials = prompt('enter your initials');
+          highscores.push({initials: initials, score:this.coinPickupCount});
+          setTimeout(startNewGame, 5000);
+          //$(".end-screen").hide();
+          setTimeout(function(){$(".end-screen").hide()}, 5000);
+          // this.lives = 3;
+          // this.game.state.restart(true, false, {level: this.level - 1, lives: 3 });
         }
     }
 };
@@ -541,12 +542,13 @@ Spider.prototype = Object.create(Phaser.Sprite.prototype);
 Spider.prototype.constructor = Spider;
 
 Spider.prototype.update = function () {
+    let speed = Spider.SPEED + (PlayState.level * 10);
     // check against walls and reverse direction if necessary
     if (this.body.touching.right || this.body.blocked.right) {
-        this.body.velocity.x = -Spider.SPEED; // turn left
+        this.body.velocity.x = -speed ;//- (this.level * 10); // turn left
     }
     else if (this.body.touching.left || this.body.blocked.left) {
-        this.body.velocity.x = Spider.SPEED; // turn right
+        this.body.velocity.x = speed;// + (this.level * 10); // turn right
     }
     if (this.body.velocity.x < 0) {
        this.scale.x = -1;
@@ -568,10 +570,10 @@ function sleepFor( sleepDuration ){
     var now = new Date().getTime();
     while(new Date().getTime() < now + sleepDuration){ /* do nothing */ }
 }
-window.onload = function () {
-    game = new Phaser.Game(960, 600, Phaser.AUTO, 'gamething');
-    game.state.add('play', PlayState);
-    //game.state.add('GameOver', gameOver);
-    game.state.start('play');
-    game.state.start('play', true, false, {level: 4});
-};
+// $('#click-here').click(function () {
+//     game = new Phaser.Game(960, 600, Phaser.AUTO, 'gamething');
+//     game.state.add('play', PlayState);
+//     //game.state.add('GameOver', gameOver);
+//     game.state.start('play');
+//     game.state.start('play', true, false, {level: 4});
+// });
