@@ -46,4 +46,4 @@ Ken Rutan
 
 ## License
 
-Licensed MIT
+Licensed MIT 2017
