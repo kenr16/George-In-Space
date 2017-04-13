@@ -457,21 +457,15 @@ PlayState._onHeroVsEnemy = function (hero, enemy) {
         hero.wound();
         game.add.tween(hero).to({alpha:0}, 200, Phaser.Easing.Linear.None, true, 0, 5, true);
         this.lives--;
-        if (this.lives === 0) {
-          //this.hero.kill();
-          //game.state.start('Over');
-          //alert("You scored " + this.coinPickupCount + " points!");
+        if (this.lives === -1) {
+
           $("#insertTextHere").text(this.coinPickupCount);
           $(".end-screen").fadeIn(1000);
-          // ({'top': '0, 50%'}, 600);
           $(".dropping-text").animate({top: '600px'}, 650);
           let initials = prompt('enter your initials');
           highscores.push({initials: initials, score:this.coinPickupCount});
           setTimeout(startNewGame, 5000);
-          //$(".end-screen").hide();
           setTimeout(function(){$(".end-screen").hide()}, 5000);
-          // this.lives = 3;
-          // this.game.state.restart(true, false, {level: this.level - 1, lives: 3 });
         }
     }
 };
@@ -506,12 +500,6 @@ PlayState._handleInput = function () {
     else if (this.keys.right.isDown) { // move hero right
         this.hero.move(1);
     }
-    // this.keys.left.onDown.add(function() {
-    //   this.hero.move(-1);
-    // }, this);
-    // this.keys.right.onDown.add(function() {
-    //   this.hero.move(1);
-    // }, this);
     this.keys.up.onDown.add(function () {
         this.hero.jump();
     }, this);
@@ -570,10 +558,3 @@ function sleepFor( sleepDuration ){
     var now = new Date().getTime();
     while(new Date().getTime() < now + sleepDuration){ /* do nothing */ }
 }
-// $('#click-here').click(function () {
-//     game = new Phaser.Game(960, 600, Phaser.AUTO, 'gamething');
-//     game.state.add('play', PlayState);
-//     //game.state.add('GameOver', gameOver);
-//     game.state.start('play');
-//     game.state.start('play', true, false, {level: 4});
-// });
