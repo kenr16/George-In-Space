@@ -131,7 +131,7 @@ PlayState.preload = function () {
     this.game.load.json('level:2', 'data/level02.json');
     this.game.load.json('level:3', 'data/level03.json');
     this.game.load.json('level:4', 'data/level04.json');
-    this.game.load.spritesheet('hero', 'images/hero.png', 36, 42);
+    this.game.load.spritesheet('hero', 'images/hero.png', 32, 32);
     this.game.load.image('background', 'images/background.png');
     this.game.load.image('ground', 'images/ground.png');
     this.game.load.image('grass:8x1', 'images/grass_8x1.png');
@@ -143,18 +143,21 @@ PlayState.preload = function () {
     this.game.load.audio('sfx:coin', 'audio/coin.wav');
     this.game.load.spritesheet('coin', 'images/coin_animated.png', 32, 32);
     this.game.load.spritesheet('spider', 'images/spider.png', 32, 32);
+    this.game.load.spritesheet('spikey', 'images/spikey.png', 32, 32);
     this.game.load.image('invisible-wall', 'images/invisible_wall.png');
     this.game.load.audio('sfx:stomp', 'audio/stomp.wav');
     this.game.load.image('icon:coin', 'images/coin_icon.png');
     this.game.load.image('font:numbers', 'images/numbers.png');
-    this.game.load.spritesheet('door', 'images/door.png', 42, 66);
+    this.game.load.spritesheet('door', 'images/door.png', 64, 64);
     this.game.load.image('key', 'images/key.png');
     this.game.load.image('icon:lifeIcon', 'images/lifecounter.png');
     this.game.load.audio('sfx:key', 'audio/key.wav');
     this.game.load.audio('sfx:door', 'audio/door.wav');
-    this.game.load.spritesheet('icon:key', 'images/key_icon.png', 34, 30);
-
-
+    this.game.load.audio('sfx:death', 'audio/death.mp3');
+    this.game.load.spritesheet('icon:key', 'images/key_icon.png', 32, 32);
+    this.game.load.tilemap('levelKai', 'data/test.json', null, Phaser.Tilemap.TILED_JSON);
+    this.game.load.image('lava', '/images/lava.png');
+    this.game.load.image('platform', '/images/platform.png');
 };
 
 // create game entities and set up world here
@@ -168,7 +171,25 @@ PlayState.create = function () {
         door: this.game.add.audio('sfx:door'),
     };
     this.game.add.image(0, 0, 'background');
-    this._loadLevel(this.game.cache.getJSON(`level:${this.level}`));
+    if (true) {
+      this._loadLevel(this.game.cache.getJSON(`level:${this.level}`));
+    } else {
+      this.map = this.game.add.tilemap('levelKai');
+      this.map.addTilesetImage('lava', 'lava');
+      this.map.addTilesetImage('door', 'door');
+      this.map.addTilesetImage('door', 'door');
+      this.map.addTilesetImage('key', 'key');
+      this.map.addTilesetImage('coin', 'coin');
+      this.map.addTilesetImage('spider', 'spider');
+      this.map.addTilesetImage('hero', 'hero');
+      this.map.addTilesetImage('platform', 'platform');
+      this.layers = [];
+      ['platforms', 'coins', 'spiders', 'spikes', 'door', 'hero', 'key'].forEach(function(elem) {
+        this.layers.push(this.map.createLayer(elem));
+      }, this
+      );
+      this.layers[0].resizeWorld();
+  }
     this.game.world.setBounds(0,0, 960, 1300);
     //this._loadRandomPlatforms();
     this._createHud();
@@ -414,6 +435,10 @@ PlayState._onHeroVsCoin = function (hero, coin) {
     this.sfx.coin.play();
     coin.kill();
     this.coinPickupCount++;
+    if (this.coinPickupCount === 100) {
+      this.coinPickupCount = 0;
+      this.lives++;
+    }
 };
 
 PlayState._onHeroVsplatforms = function (hero) {
