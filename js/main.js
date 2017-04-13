@@ -401,6 +401,7 @@ PlayState._spawnCharacters = function (data) {
           $(".dropping-text").animate({top: '600px'}, 650);
           let initials = prompt('enter your initials');
           highscores.push({initials: initials, score:this.coinPickupCount});
+          this.lives = 3;
           setTimeout(startNewGame, 5000);
           setTimeout(function(){$(".end-screen").hide()}, 5000);
       }}, this);
@@ -492,6 +493,7 @@ PlayState._onHeroVsEnemy = function (hero, enemy) {
           $(".dropping-text").animate({top: '600px'}, 650);
           let initials = prompt('enter your initials');
           highscores.push({initials: initials, score:this.coinPickupCount});
+          this.lives = 3;
           setTimeout(startNewGame, 5000);
           setTimeout(function(){$(".end-screen").hide()}, 5000);
         }
