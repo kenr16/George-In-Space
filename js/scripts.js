@@ -1,4 +1,11 @@
 $(document).ready(function(){
+
+  $(".title-screen").show();
+  setTimeout(function() {
+    $(".title-screen").fadeOut(100);
+  }, 5000);
+
+
   $("#click-here").click(function(event) {
     event.preventDefault();
     $(".end-screen").fadeIn(1000);
