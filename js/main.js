@@ -16,10 +16,10 @@ Hero.prototype.constructor = Hero;
 Hero.prototype.move = function (direction) {
     const SPEED = 5;
     this.x += direction * SPEED;
-    if (this.x < 0) {
+    if (direction > 0) {
        this.scale.x = -1;
     }
-    else if (this.body.velocity.x > 0) {
+    else {
        this.scale.x = 1;
     }
 };
@@ -49,7 +49,7 @@ Hero.prototype._getAnimationName = function () {
     else if (this.body.velocity.y >= 0 && !this.body.touching.down) {
         name = 'fall';
     }
-    else if (this.body.velocity.x !== 0 && this.body.touching.down) {
+    else if ((PlayState.keys.left.isDown || PlayState.keys.right.isDown) && this.body.touching.down) {
         name = 'run';
     }
 
@@ -118,7 +118,7 @@ PlayState.init = function (data) {
         }
     }, this);
     this.coinPickupCount = data.score||0;
-    this.lives = data.lives || 3; //Allows the player a counter with three lives.
+    this.lives = (data.hasOwnProperty('lives')) ? data.lives : 3; //Allows the player a counter with three lives.
     this.hasKey = false;
     this.level = (data.level || 0) % LEVEL_COUNT;
 };
@@ -174,6 +174,7 @@ PlayState.create = function () {
         stomp: this.game.add.audio('sfx:stomp'),
         key: this.game.add.audio('sfx:key'),
         door: this.game.add.audio('sfx:door'),
+        death: this.game.add.audio('sfx:death'),
     };
     this.game.add.image(0, 0, 'background');
     if (true) {
@@ -462,9 +463,10 @@ PlayState._onHeroVsEnemy = function (hero, enemy) {
         this.sfx.stomp.play();
     }
     else { // game over -> restart the game
-        this.sfx.stomp.play();
+        // this.sfx.death.play();
         hero.wound();
         game.add.tween(hero).to({alpha:0}, 200, Phaser.Easing.Linear.None, true, 0, 5, true);
+        this.sfx.death.play();
         this.lives--;
         if (this.lives === -1) {
 
@@ -496,7 +498,7 @@ PlayState._onMobileVsSpikes = function (mobile, spikes) {
 }
 
 PlayState._onHeroVsSpikes = function (hero, spikes) {
-  this.sfx.stomp.play();
+  this.sfx.death.play();
   hero.bounce();
   hero.body.checkCollision.none = true;
   hero.body.collideWorldBounds = false;
