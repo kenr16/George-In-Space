@@ -222,7 +222,7 @@ PlayState._loadLevel = function (data) {
       data.spikes.forEach(this._spawnSpikes, this);
     }
     // this.enemyWalls.visible = false;
-    this.enemyWalls.alpha = 0.1;  //sets the transparency
+    this.enemyWalls.alpha = 0;  //sets the transparency
     // spawn all platforms
     data.platforms.forEach(this._spawnPlatform, this);
     //...
