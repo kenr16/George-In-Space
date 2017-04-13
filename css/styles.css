@@ -31,6 +31,15 @@ body {
   opacity: 0.80;
 }
 
+.title-screen {
+  top: 12%;
+  left: 25%;
+
+  position: absolute;
+  background-color: #000000;
+  z-index: 2;
+}
+
 .dropping-text {
   color: white;
   text-align: center;
