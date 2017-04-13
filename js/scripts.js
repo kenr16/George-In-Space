@@ -5,7 +5,7 @@ var startNewGame = function () {
     //game.state.add('GameOver', gameOver);
     //game.state.start('play');
   }
-    game.state.start('play', true, false, {level: 4});
+    game.state.start('play', true, false, {level: 0});
 };
 
 $(document).ready(function(){
