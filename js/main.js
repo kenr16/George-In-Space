@@ -160,6 +160,7 @@ PlayState.preload = function () {
     this.game.load.tilemap('levelKai', 'data/test.json', null, Phaser.Tilemap.TILED_JSON);
     this.game.load.image('lava', '/images/lava.png');
     this.game.load.image('platform', '/images/platform.png');
+    this.game.load.image('created', '/images/createdby.png');
 
 
 
@@ -190,7 +191,7 @@ PlayState.create = function () {
       this.map.addTilesetImage('hero', 'hero');
       this.map.addTilesetImage('platform', 'platform');
       this.layers = [];
-      ['platforms', 'coins', 'spiders', 'spikes', 'door', 'hero', 'key'].forEach(function(elem) {
+      ['platforms', 'coins', 'spiders', 'spikes', 'door', 'hero', 'key', 'created'].forEach(function(elem) {
         this.layers.push(this.map.createLayer(elem));
       }, this
       );
@@ -209,6 +210,13 @@ PlayState._loadLevel = function (data) {
     this.coins = this.game.add.group();
     this.spiders = this.game.add.group();
     this.enemyWalls = this.game.add.group();
+    if (data.hasOwnProperty('created')) {
+      this.created = this.game.add.group();
+      let sprite = this.created.create(data.created.x, data.created.y, data.created.image);
+      this.game.physics.enable(sprite);
+      sprite.body.allowGravity = false;
+      sprite.body.immovable = true;
+    }
     if (data.hasOwnProperty('spikes')) {
       this.spikes = this.game.add.group();
       data.spikes.forEach(this._spawnSpikes, this);
