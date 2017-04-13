@@ -101,7 +101,7 @@ Hero.prototype.wound = function () {
 
 PlayState = {};
 // load game assets here
-const LEVEL_COUNT = 5;
+const LEVEL_COUNT = 6;
 
 PlayState.init = function (data) {
     this.keys = this.game.input.keyboard.addKeys({
@@ -132,6 +132,7 @@ PlayState.preload = function () {
     this.game.load.json('level:2', 'data/level02.json');
     this.game.load.json('level:3', 'data/level03.json');
     this.game.load.json('level:4', 'data/level04.json');
+    this.game.load.json('level:5', 'data/level05.json');
     this.game.load.spritesheet('hero', 'images/hero.png', 32, 32);
     this.game.load.image('background', 'images/background.png');
     this.game.load.image('ground', 'images/ground.png');
@@ -347,6 +348,11 @@ PlayState._spawnSpikes = function (spike) {
     sprite.body.immovable = true;  //Makes the spike unmovable.
     this._spawnEnemyWall(spike.x, spike.y, 'left');
     this._spawnEnemyWall(spike.x + sprite.width, spike.y, 'right');
+    this.game.add.tween(sprite)
+        .to({y: sprite.y + 6}, 1000, Phaser.Easing.Sinusoidal.InOut)
+        .yoyo(true)
+        .loop()
+        .start();
 };
 PlayState._spawnEnemyWall = function (x, y, side) {
     let sprite = this.enemyWalls.create(x, y, 'invisible-wall');
@@ -408,7 +414,7 @@ PlayState._spawnKey = function (x, y) {
 PlayState.update = function () {
     this._handleCollisions();
     this._handleInput();
-    this.coinFont.text = `x${this.coinPickupCount}`;
+    this.coinFont.text = `x${this.coinPickupCount % 100}`;
     this.keyIcon.frame = this.hasKey ? 1 : 0;
     this.lifeFont.text = `x${this.lives}`;
 };
@@ -439,8 +445,7 @@ PlayState._onHeroVsCoin = function (hero, coin) {
     this.sfx.coin.play();
     coin.kill();
     this.coinPickupCount++;
-    if (this.coinPickupCount === 100) {
-      this.coinPickupCount = 0;
+    if (this.coinPickupCount % 100 === 0) {
       this.lives++;
     }
 };
